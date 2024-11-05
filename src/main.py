@@ -1,19 +1,26 @@
 from fronius_to_influx import FroniusToInflux
-from influxdb import InfluxDBClient
-from astral import Location
-
+from influxdb_client import InfluxDBClient
+from astral import LocationInfo
 import pytz
 
-
-client = InfluxDBClient(url="localhost", token="==")
-location = Location(("Poznan", "Europe", 52.408078, 16.933618, "Europe/Warsaw", 87))
-tz = pytz.timezone("Europe/Warsaw")
-endpoints = [
-    "http://172.30.1.11:5000/3PInverterData.json",
-    "http://172.30.1.11:5000/CommonInverterData.json",
-    "http://172.30.1.11:5000/MinMaxInverterData.json",
+INFLUX_ADDR = "10.0.0.3"
+INFLUX_TOKEN = "=="
+INFLUX_ORG = "my-org"
+INFLUX_BUCKET = "solar"
+INVERTER_ADDR = "10.0.0.200"
+USED_ENPOINTS = [
+    #"/solar_api/v1/GetInverterRealtimeData.cgi",
+    #"/solar_api/v1/GetInverterInfo.cgi",
+    #"/solar_api/v1/GetActiveDeviceInfo.cgi",
+    "/solar_api/v1/GetMeterRealtimeData.cgi",
+    #"/solar_api/v1/GetStorageRealtimeData.cgi",
+    #"/solar_api/v1/GetPowerFlowRealtimeData.fcgi",
 ]
 
-z = FroniusToInflux(client, location, endpoints, tz)
+z = FroniusToInflux(
+    client = InfluxDBClient(url=INFLUX_ADDR, token=INFLUX_TOKEN, org=INFLUX_ORG),
+    inverter_address = INVERTER_ADDR,
+    endpoints = USED_ENPOINTS,
+)
 z.IGNORE_SUN_DOWN = True
 z.run()
