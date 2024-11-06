@@ -5,25 +5,16 @@ Collect Fronius inverter data and save in Influxdb for Grafana. This tool collec
 This tool collects data from the following endpoints: 
 
     http://<fronius_ip>/solar_api/v1/GetInverterRealtimeData.cgi
-    http://<fronius_ip>/solar_api/v1/GetInverterInfo.cgi
-    http://<fronius_ip>/solar_api/v1/GetActiveDeviceInfo.cgi
     http://<fronius_ip>/solar_api/v1/GetMeterRealtimeData.cgi
     http://<fronius_ip>/solar_api/v1/GetStorageRealtimeData.cgi
     http://<fronius_ip>/solar_api/v1/GetPowerFlowRealtimeData.fcgi
 
-# install requirements
-To install requirements:
-
-    pip install -r requirements.txt
-
 # run
-To run this tool adjust configuration (IP addresses, port numbers, user names and passwords, list of endpoints) in `src/main.py`:
+To run this tool adjust configuration (IP addresses, port numbers, user names and passwords, list of endpoints) in `compose.yaml` and create a :
 
-    vim src/main.py 
+    vim compose.yaml
+    echo "==my-token" > influx_token.txt
 
 Then run:
 
-    python src/main.py
-
-# grafana dashboards
-I put my dashboards in `grafana_dashboards` directory. Feel free to use them.
+    docker compose build && docker compose up -d
