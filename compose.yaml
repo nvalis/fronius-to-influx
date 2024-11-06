@@ -1,0 +1,22 @@
+services:
+  solar-to-influx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+      - INFLUX_ADDR=10.0.0.3:8086
+      - INFLUX_TOKEN_FILE=/run/secrets/influx_token
+      - INFLUX_ORG=my-org
+      - INFLUX_BUCKET=solar
+      - INVERTER_ADDR=10.0.0.200
+    container_name: solar-to-influx
+    restart: unless-stopped
+    volumes:
+      - "./config:/config"
+    secrets:
+      - influx_token
+
+secrets:
+  influx_token:
+    file: influx_token.txt
